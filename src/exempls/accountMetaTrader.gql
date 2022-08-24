@@ -1,0 +1,98 @@
+mutation{
+  accountMetaTraderCreate(data:{
+    name:"pato"
+    password:"asd"
+    server:"asdasd"
+    balance:100000
+    balanceCredit:0
+    accountNumber:5156
+  }){
+    field
+    message
+  }
+}
+
+mutation{
+  accountMetaTraderUpdate(data:{
+    id:1
+    name:"ganço"
+    balance:500000
+  }){
+    field
+    message
+  }
+}
+
+query{
+  accountMetaTraderObjects{
+    id
+    name
+    server
+    balance
+    balanceCredit
+    accountNumber
+    status
+  }
+}
+
+
+mutation{
+  accountMetaTraderStopWork(data:{
+    id:1
+    status:WORK
+  }){
+    field
+    message
+  }
+}
+
+mutation{
+  accountUpdatePython(data:{
+    id:2
+    status:WORK
+  }){
+    field
+    message
+  }
+}
+
+query{
+  accountMetaTraderSingleFind(data:{
+    id:6
+  }){
+    id
+    finishDate
+    name
+    server
+    balance
+    balanceCredit
+    accountNumber
+    status
+    OrdersAccount{
+      id
+      ticket
+      par
+      direction
+      lote
+      status
+      accountMetaTraderId
+    }
+    user{
+      email
+      name
+    }
+    __typename
+  }
+}
+
+
+mutation{
+  accountMetaTraderDelete(data:{
+    id:
+  }){
+    field
+    message
+  }
+}
+
+

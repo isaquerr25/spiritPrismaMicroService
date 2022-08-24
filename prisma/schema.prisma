@@ -1,0 +1,293 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://tempest:vXtbfrlsDSzneWFheo0F@185.227.110.67:15432/spirit"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  DEVELOPER
+  TESTER
+  GUEST
+}
+
+model User {
+  id                Int                 @id @default(autoincrement())
+  email             String              @unique
+  name              String
+  password          String
+  hashPayment       String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  affiliated        User?               @relation("AffiliatedHistory", fields: [affiliatedId], references: [id])
+  affiliatedId      Int?
+  percentAffiliated Int?
+  percentFess       Int?
+  indicated         User[]              @relation("AffiliatedHistory")
+  Role              Role                @default(GUEST)
+  confirm           String?             @default("notValid")
+  numberTelephone   String?
+  AccountMetaTrader AccountMetaTrader[] @relation("UserAccountMetaTrader")
+  PaymentAffilieted PaymentAffilieted[]
+}
+
+enum AccountMetaTraderEnum {
+  WAIT_PAYMENT
+  WORK
+  DOCUMENT_SEND_INVALID
+  LATE_INVOICES
+  PROCESS
+  PAY_TO_ACTIVATE
+  STOP
+  ERROR_LOGIN
+  NOT_HAVE_ORDER_NAME_LOCAL_REFERENCE
+}
+
+enum AccountMetaTraderTypeEnum {
+  ADMIN
+  MANAGER
+  DEVELOPER
+  TESTER
+  GUEST
+}
+
+model AccountMetaTrader {
+  id            Int                       @id @default(autoincrement())
+  name          String
+  password      String
+  server        String
+  balance       Int
+  balanceCredit Int
+  accountNumber Int
+  status        AccountMetaTraderEnum     @default(WAIT_PAYMENT)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  finishDate    DateTime?
+  invoices      Invoices[]                @relation("MetaTraderInvoices")
+  user          User                      @relation("UserAccountMetaTrader", fields: [userId], references: [id])
+  userId        Int
+  OrdersAccount OrdersAccount[]
+  typeAccount   AccountMetaTraderTypeEnum @default(GUEST)
+  local         String[]
+  accountType   accountTypeEnum           @default(NORMAL)
+  PlanToAccount PlanToAccount[]
+}
+
+enum PlanToAccountStatusEnum {
+  OPEN
+  COMPLETE
+}
+
+model PlanToAccount {
+  id                  Int                     @id @default(autoincrement())
+  PlanInvoices        PlanInvoices            @relation(fields: [planInvoicesId], references: [id])
+  planInvoicesId      Int // relation scalar field (used in the `@relation` attribute above)
+  AccountMetaTrader   AccountMetaTrader       @relation(fields: [accountMetaTraderId], references: [id])
+  accountMetaTraderId Int // relation scalar field (used in the `@relation` attribute above)
+  createdAt           DateTime                @default(now())
+  status              PlanToAccountStatusEnum @default(OPEN)
+}
+
+enum accountTypeEnum {
+  LOW
+  NORMAL
+  AGGRESSIVE
+  DEFAULT
+}
+
+enum PlanInvoicesTypeEnum {
+  ALL
+  SPECIFIC_ACCOUNT
+}
+
+enum PlanInvoicesStatusEnum {
+  OPEN
+  COMPLETE
+}
+
+model PlanInvoices {
+  id                     Int                    @id @default(autoincrement())
+  beginDate              DateTime
+  finishDate             DateTime
+  realDollarQuote        Int
+  accountNumber          Int?
+  grossProfitDollar      Int?
+  profitDollar           Int?
+  affiliatedProfitDollar Int?
+  type                   PlanInvoicesTypeEnum   @default(ALL)
+  invoicesRef            Invoices[]
+  status                 PlanInvoicesStatusEnum @default(OPEN)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  PlanToAccount          PlanToAccount[]
+  local                  String                 @default("default")
+}
+
+enum InvoicesEnum {
+  WAIT_PAYMENT
+  DOCUMENT_SEND_INVALID
+  LATE_INVOICES
+  PROCESS
+  PAID_OUT
+  CANCEL
+}
+
+enum InvoicesTypeEnum {
+  FINISH_ACCOUNT
+  OPEN_ACCOUNT
+  COMMON
+}
+
+model Invoices {
+  id                  Int               @id @default(autoincrement())
+  valueOrigin         Int               @default(0)
+  valueDollar         Int
+  valueReal           Int
+  dollarQuote         Int
+  percentProfit       Int
+  percentFess         Int
+  status              InvoicesEnum      @default(WAIT_PAYMENT)
+  createdAt           DateTime          @default(now())
+  paymenbeginDate     DateTime?
+  paymentDate         DateTime?
+  updatedAt           DateTime          @updatedAt
+  accountMetaTraderId Int
+  metaTraderRefr      AccountMetaTrader @relation("MetaTraderInvoices", fields: [accountMetaTraderId], references: [id], onDelete: Cascade)
+  paymentProof        PaymentProof[]
+  PlanInvoices        PlanInvoices?     @relation(fields: [planInvoicesId], references: [id])
+  planInvoicesId      Int?
+  expirationDate      DateTime?
+  type                InvoicesTypeEnum  @default(COMMON)
+}
+
+enum OrdersStatusEnum {
+  CLOSE
+  OPEN
+  PROBLEM
+}
+
+enum OrdersTypeEnum {
+  NORMAL
+  SPECIAL
+  CORRECTION
+}
+
+model OrdersAccount {
+  id                  Int                 @id @default(autoincrement())
+  par                 String
+  direction           OrdersDirectionEnum
+  lote                Int
+  ticket              Int
+  local               String
+  type                OrdersTypeEnum
+  status              OrdersStatusEnum
+  refAccount          AccountMetaTrader   @relation(fields: [accountMetaTraderId], references: [id])
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  accountMetaTraderId Int
+  refOriginalOrder    Orders              @relation(fields: [ordersId], references: [id])
+  ordersId            Int
+  takeProfit          String?
+  stopLoss            String?
+}
+
+enum OrdersDirectionEnum {
+  BUY
+  SELL
+}
+
+model Orders {
+  id            Int                 @id @default(autoincrement())
+  par           String
+  direction     OrdersDirectionEnum
+  lote          Int
+  ticket        Int
+  local         String
+  type          OrdersTypeEnum
+  status        OrdersStatusEnum
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  OrdersAccount OrdersAccount[]
+  takeProfit    String?
+  stopLoss      String?
+}
+
+enum LoteAutoCalculateDangerEnum {
+  LOW
+  NORMAL
+  AGGRESSIVE
+  DEFAULT
+}
+
+enum styleEnum {
+  FIX
+  MULTIPLY_2
+  MULTIPLY_1_1
+  MULTIPLY_1_2
+  MULTIPLY_1_3
+  MULTIPLY_1_4
+  MULTIPLY_1_5
+}
+
+model LoteAutoCalculate {
+  id         Int                         @id @default(autoincrement())
+  minCapital Int
+  maxCapital Int
+  maxLot     Int?
+  minLot     Int?
+  local      String
+  valueBase  Int
+  type       LoteAutoCalculateDangerEnum
+  styleMath  styleEnum                   @default(MULTIPLY_1_1)
+  //identifica qual estilo de operação esta trabalhando sempre baseado no local e nas ordens ainda abertas
+  createdAt  DateTime                    @default(now())
+  updatedAt  DateTime                    @updatedAt
+}
+
+enum PaymentProofEnum {
+  INVALID
+  VALID
+  PROCESS
+}
+
+model PaymentProof {
+  id         Int               @id @default(autoincrement())
+  state      PaymentProofEnum? @default(PROCESS)
+  fileName   String
+  refInvoce  Invoices          @relation(fields: [invoicesId], references: [id])
+  invoicesId Int
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+}
+
+enum PaymentAffilietedEnum {
+  WAIT_CLOSE_CYCLO
+  NORMAL
+  AGGRESSIVE
+  DEFAULT
+}
+
+model PaymentAffilieted {
+  id                  Int          @id @default(autoincrement())
+  valueDolar          Int
+  valueReal           Int
+  dollarQuote         Int
+  status              InvoicesEnum @default(WAIT_PAYMENT)
+  createdAt           DateTime     @default(now())
+  paymenbeginDate     DateTime?
+  paymentDate         DateTime?
+  updatedAt           DateTime     @updatedAt
+  accountMetaTraderId Int
+  refUser             User         @relation(fields: [userId], references: [id])
+  userId              Int
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  action    String
+  createdAt DateTime @default(now())
+}

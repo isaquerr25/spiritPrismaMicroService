@@ -1,0 +1,15 @@
+query InvoiceObjectsOpen {
+	invoiceObjectsOpen {
+		id
+		valueDollar
+		valueReal
+		dollarQuote
+		percentProfit
+		percentProfit
+		percentFess
+		percentAffiliated
+		status
+		paymenbeginDate
+		expirationDate
+	}
+}

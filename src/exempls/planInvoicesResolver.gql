@@ -1,0 +1,58 @@
+mutation{
+  planInvoicesCreate(data:{
+    beginDate:"2020/05/01"
+    finishDate:"2020/05/31"
+    realDollarQuote:520
+    type:ALL
+    local:"pato"
+  }){
+    field
+    message
+  }
+}
+
+
+
+mutation{
+  planInvoicesUpdate(data:{
+    id:1
+    grossProfitDollar:5
+    profitDollar:500
+    affiliatedProfitDollar:0
+    realDollarQuote:15000
+    status:COMPLETE
+  }){
+    field
+    message
+  }
+}
+
+
+
+query {
+  planInvoiceLocalPython(
+		data: {
+      local:"pato"
+    }){
+    PlanInvoices{
+      id
+      beginDate
+      finishDate
+      realDollarQuote
+      local
+      status
+      type
+      grossProfitDollar
+      createdAt
+      
+    }
+    AccountMetaTrader{
+      id
+      name
+      password
+      accountNumber
+      server
+      
+    }
+  }
+}

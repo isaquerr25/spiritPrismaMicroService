@@ -1,0 +1,31 @@
+mutation{
+  ordersAccountGroupDefinition(data:[
+      {
+        id: null,
+        status: OPEN,
+        ordersId: 1,
+        ticket: 10132310,
+        par: "XAUUSD",
+        direction: BUY,
+        lote: 10,
+        local: "default",
+        type: NORMAL,
+        accountMetaTraderId: 2
+      },
+      {
+        id: 3,
+        status: CLOSE,
+        ordersId: 1,
+        ticket: 100000,
+        par: "XAUUSD",
+        direction: BUY,
+        lote: 10,
+        local: "default",
+        type: NORMAL,
+        accountMetaTraderId: 2
+      }
+  ]){
+    field
+    message
+  }
+}

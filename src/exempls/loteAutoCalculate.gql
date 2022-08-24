@@ -1,0 +1,81 @@
+query {
+	loteAutoCalculateAll {
+		id
+		minCapital
+		maxCapital
+		maxLot
+		minLot
+		local
+		valueBase
+		type
+		styleMath
+	}
+}
+
+mutation {
+	loteAutoCalculateUpdate(
+		data: {
+			id: 1
+			minCapital: 1
+			maxCapital: 1
+			maxLot: 1
+			minLot: 1
+			local: 1
+			valueBase: 1
+			type: LOW
+			styleMath: FIX
+		}
+	) {
+		field
+		message
+	}
+}
+
+mutation LoteAutoCalculateCreate(
+	$minCapital: Int!
+	$maxCapital: Int!
+	$maxLot: Int
+	$minLot: Int
+	$local: String!
+	$valueBase: Int!
+	$type: LoteAutoCalculateDangerEnum!
+	$styleMath: styleEnum!
+) {
+	loteAutoCalculateCreate(
+		data: {
+			minCapital: $minCapital
+			maxCapital: $maxCapital
+			minLot: $minLot
+			maxLot: $maxLot
+			local: $local
+			valueBase: $valueBase
+			type: $type
+			styleMath: $styleMath
+		}
+	) {
+		field
+		message
+	}
+}
+
+mutation {
+	loteAutoCalculateDelete(data: { id: 1 }) {
+		field
+		message
+	}
+}
+
+query {
+	loteAutoCalculateSingleFindStaff(data: { id: 1 }) {
+		minCapital
+		maxCapital
+		maxLot
+		minLot
+		local
+		valueBase
+		type
+		styleMath
+		createdAt
+		updatedAt
+	}
+}

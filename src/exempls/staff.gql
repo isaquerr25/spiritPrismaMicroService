@@ -1,0 +1,128 @@
+/* ------------------------------- Staff login ------------------------------ */
+mutation {
+	loginStaff(data: { email: "main@spiritgoldforex.com", password: "Teste25@" }) {
+		field
+		message
+	}
+}
+
+query {
+	activeStartStaff {
+		cyclesStart
+		documentsValidate
+		valueEnterToday
+		withdrawAll
+		transactionPay
+	}
+}
+
+
+mutation{
+  userInfoIdStaff(data:{
+    id:3
+  }){
+    name
+    email
+    wallet
+    document
+    qDeposit
+    allDeposit
+    document
+    qDeposit
+    allDeposit
+    qWithdraw
+    allWithdraw
+    qInvest
+    allInvest
+    qCompleteInvest
+    allCompleteInvest
+    qCycleProcess
+    allCycleProcess
+    qCycleActive
+    allCycleActive
+    qCycleComplete
+    allCycleComplete
+    cash
+  }
+}
+
+
+
+
+mutation{
+  allTransactionsByUserStaff(data:{
+    id:3
+  }){
+    id
+    action
+    value
+    state
+    hash
+    createdAt
+    updatedAt
+    wallet
+  }
+}
+
+query{
+  accountMetaTraderAllObjectsStaff{
+   id
+    name
+    password
+    server
+    balance
+    balanceCredit
+    accountNumber
+    status
+    finishDate
+    userId
+    typeAccount
+    local
+    accountType
+    refOriginalOrder{
+      id
+      par
+      direction
+      lote
+      ticket
+      local
+      type
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+}
+
+
+
+mutation{
+  accountMetaTraderUpdateStaff(data:{
+     id:1
+     name:"pato"
+    password:"asdasda"
+    server:"asdasda"
+    balance:100
+    balanceCredit:10
+    accountNumber:10
+    status:WAIT_PAYMENT
+    finishDate:"asdasda"
+    userId:7
+    typeAccount:ADMIN
+    local:"asdassssda"
+    accountType:LOW
+    }){
+    field
+    message
+  }
+  
+}
+
+
+
+
+
+
+
+

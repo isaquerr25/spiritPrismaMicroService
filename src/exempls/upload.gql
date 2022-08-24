@@ -1,0 +1,42 @@
+query {
+	allDocumentsValidation {
+		id
+		state
+		fileName
+		createdAt
+		updatedAt
+		refInvoce {
+			id
+			accountMetaTraderId
+			valueDollar
+			valueReal
+			dollarQuote
+			percentProfit
+			percentFess
+			percentAffiliated
+			valueOrigin
+			status
+			createdAt
+			paymenbeginDate
+			updatedAt
+			expirationDate
+			metaTraderRefr {
+				id
+				name
+				balanceCredit
+				balance
+				status
+				finishDate
+				accountNumber
+			}
+		}
+		invoicesId
+	}
+}
+
+mutation {
+	alterDocument(data: { id: 1, state: VALID }) {
+		field
+		message
+	}
+}

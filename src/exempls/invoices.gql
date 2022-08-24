@@ -1,0 +1,135 @@
+query {
+	invoiceObjects {
+		id
+		valueDollar
+		valueReal
+		dollarQuote
+		percentProfit
+		percentProfit
+		percentFess
+		percentAffiliated
+		status
+		paymenbeginDate
+		expirationDate
+	}
+}
+
+query {
+	invoiceObjectsOpen {
+		id
+		valueDollar
+		valueReal
+		dollarQuote
+		percentProfit
+		percentProfit
+		percentFess
+		percentAffiliated
+		status
+		paymenbeginDate
+		expirationDate
+		accountMetaTraderId
+		valueOrigin
+		metaTraderRefr {
+			id
+			name
+			balance
+			balanceCredit
+			accountNumber
+			status
+			finishDate
+		}
+	}
+}
+
+query {
+	invoiceObjectSingleRequest(data: { token: "12" }) {
+		id
+		valueDollar
+		valueReal
+		dollarQuote
+		percentProfit
+		percentProfit
+		percentFess
+		percentAffiliated
+		status
+		paymenbeginDate
+		expirationDate
+		accountMetaTraderId
+		valueOrigin
+		metaTraderRefr {
+			id
+			name
+			balance
+			balanceCredit
+			accountNumber
+			status
+			finishDate
+		}
+	}
+}
+
+query {
+	invoiceObjectsStaff {
+		id
+		valueDollar
+		valueReal
+		dollarQuote
+		percentProfit
+		percentFess
+		percentAffiliated
+		status
+		paymenbeginDate
+		expirationDate
+		createdAt
+
+		metaTraderRefr {
+			id
+			name
+			balance
+			balanceCredit
+			accountNumber
+			status
+			finishDate
+		}
+	}
+}
+
+mutation {
+	invoiceObjectsStaffUpdate(
+		data: {
+			id: 1
+			valueDollar: 1
+			valueReal: 1
+			dollarQuote: 1
+			percentProfit: 1
+			percentProfit: 1
+			percentFess: 1
+			percentAffiliated: 0
+			status: "asda"
+			paymenbeginDate: "00/0202/012"
+			expirationDate: "00/0202/012"
+			valueOrigin: 1
+		}
+	) {
+		field
+		message
+	}
+}
+
+mutation {
+	invoiceCreateStaff(
+		res: {
+			auth: { email: "********#****", password: "********" }
+			inputsProgress: {
+				idPlanToAccount: 9
+				accountNumber: 83000449
+				profit: 152
+				capital: 100000
+				planInvoicesId: 9
+			}
+		}
+	) {
+		field
+		message
+	}
+}

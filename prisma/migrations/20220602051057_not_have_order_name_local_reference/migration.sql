@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "AccountMetaTraderEnum" ADD VALUE 'NOT_HAVE_ORDER_NAME_LOCAL_REFERENCE';

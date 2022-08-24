@@ -1,0 +1,74 @@
+mutation{
+  ordersCreate(data:{
+    par:"XAUUSD"
+    direction:BUY
+    lote: 1
+    ticket:100000
+    local:"test"
+    type:NORMAL
+    status:OPEN
+  }){
+    field
+    message
+  }
+}
+
+query{
+  ordersAll{
+    id
+    par
+    direction
+    lote
+    ticket
+    local
+    type
+    status
+    createdAt
+    updatedAt
+    OrdersAccount{
+      id
+      par
+      direction
+      lote
+      ticket
+      local
+      type
+      refAccount{
+        id
+      }
+      refOriginalOrder{
+        id
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+query{
+  ordersFilterAccount(data:{
+    local:["default","pato"]
+  }){
+    id
+  	name
+    server
+    accountNumber
+    allCurrent
+    allCopyCurrent
+    finishDate
+    status
+    typeAccount
+    missingOrders{
+      id
+      ordersId
+      ticket
+      par
+      direction
+      lote
+      local
+      type
+      accountMetaTraderId
+    }
+  }
+}
