@@ -7,6 +7,7 @@ import { GraphState, PassToken } from '../dto/utils';
 import { InputChangeAccountMetaTrader, InputDeleteAccountMetaTrader, InputNewAccountMetaTrader, InputStopWorkAccountMetaTrader, ObjectAccountMetaTrader } from '../dto/accountMetaTrader';
 import { getTokenId, validateLogin } from '../utils';
 import { InputNewInvoices, ObjectInvoices } from '../dto/invoices';
+import { emailInvoiceStruct } from '../systemEmail';
 export const prisma = new PrismaClient();
 
 
@@ -96,8 +97,6 @@ export class InvoicesResolver {
 		return value;
 	}
 
-
-	@UseMiddleware(isUserAuth)
 	@Query(() => ObjectInvoices, { nullable: true })
 	async invoiceObjectSingleRequest( @Arg('data', () => PassToken) data: PassToken,@Ctx() ctx: any) {
 		const value =  await prisma.invoices.findFirst({
@@ -211,7 +210,7 @@ export class InvoicesResolver {
 		}
 		console.log('2> ' );
 
-		const accountMTPrisma =  await prisma.accountMetaTrader.findFirst({where:{accountNumber:Number(res.inputsProgress.accountNumber)}});
+		const accountMTPrisma =  await prisma.accountMetaTrader.findFirst({where:{accountNumber:Number(res.inputsProgress.accountNumber)},include:{user:true}});
 		console.log('3> ' );
 		console.log(resultPlanInvoicesPrisma != null ? resultPlanInvoicesPrisma!.realDollarQuote : 'asds');
 		console.log('5> ' );
@@ -231,6 +230,7 @@ export class InvoicesResolver {
 				planInvoicesId: resultPlanInvoicesPrisma?.id,
 			}; 
 			try {
+				
 				await prisma.invoices.create({data});
 				
 				await prisma.planToAccount.update({
@@ -241,6 +241,58 @@ export class InvoicesResolver {
 						status:'COMPLETE'
 					}
 				});
+				
+				const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+					'Julho', 'Agosto', 'Setembor', 'Outobro', 'Novembro', 'Dezembro'];
+					
+				const d = new Date();
+				
+				const propEmail ={
+					to:accountMTPrisma.user.email,
+					from:'spiritgold.forex@gmail.com',
+					subject:'Informações sobre o progresso da conta e informações sobre pagamentos',
+					text:' '
+				};
+				console.log(propEmail);
+				await emailInvoiceStruct(
+					propEmail,
+					{
+	
+						idTransfer:process.env.KEY_PIX!,
+						numberContact:process.env.KEY_NUMBER_CONTACT!,
+						name:haveEmail.name,
+						month: monthNames[d.getMonth()],
+						account:
+							{
+								login:String(accountMTPrisma.accountNumber),
+								beginCapital:String((res.inputsProgress.capital-res.inputsProgress.profit)/100),
+								finishCapital:String(res.inputsProgress.capital/100),
+								percent:String(
+									(
+										( 
+											(res.inputsProgress.capital -
+											(res.inputsProgress.capital - res.inputsProgress.profit))
+											/res.inputsProgress.capital)*100
+									)/100
+								),
+								
+								taxes:String(
+									(res.inputsProgress.profit ?? 0) *
+									(Number(process.env.PROFIT_BUSINESS_PERCENTAGE) /100 )
+									/100),
+								
+								taxesReal: String(
+									Math.ceil((res.inputsProgress.profit ?? 0) * 
+									(  Number(process.env.PROFIT_BUSINESS_PERCENTAGE)  /100 ) * 
+									(resultPlanInvoicesPrisma?.realDollarQuote ? resultPlanInvoicesPrisma.realDollarQuote : 520) /100 /100)
+								),
+							},
+							
+						quotation:(resultPlanInvoicesPrisma?.realDollarQuote ? resultPlanInvoicesPrisma.realDollarQuote : 520)/100,
+					
+					}
+				);
+
 
 				return{
 					field: 'success',

@@ -48,7 +48,7 @@ export class InputNewInvoices {
 export class InputInvoicesAuth {
 
 	@Field(() => LoginUser) auth!: LoginUser; 
-	@Field(() => InputNewInvoices) inputsProgress!: InputNewInvoices; 	
+	@Field(() => InputNewInvoices) inputsProgress!: InputNewInvoices; 
 }
 
 

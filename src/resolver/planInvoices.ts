@@ -75,6 +75,15 @@ export class PlanInvoicesResolver {
 					}
 				}
 			});
+			
+			const planTo = await prisma.planToAccount.findMany({
+				where:{
+					local:data.local,
+					createdAt:{
+						gte:beginMoth
+					}
+				}
+			});
 
 			if(accountTo.length === 0){
 				progressInfo.push({
@@ -84,12 +93,23 @@ export class PlanInvoicesResolver {
 				return progressInfo;
 			}
 
+
+			if(planTo.length > 0){
+				progressInfo.push({
+					field: 'already have invoice to moth',
+					message: 'error',
+				});
+				return progressInfo;
+			}
+
 			const plan = await prisma.planInvoices.create({ data });
-		
+			
+			console.log(accountTo);
 			const resultMap = accountTo.map((item) =>{
 				return {
 					accountMetaTraderId:item.id,
 					planInvoicesId:plan.id,
+					local:data.local
 				};
 			});
 

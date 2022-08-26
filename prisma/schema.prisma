@@ -90,6 +90,7 @@ model PlanToAccount {
   accountMetaTraderId Int // relation scalar field (used in the `@relation` attribute above)
   createdAt           DateTime                @default(now())
   status              PlanToAccountStatusEnum @default(OPEN)
+  local               String
 }
 
 enum accountTypeEnum {

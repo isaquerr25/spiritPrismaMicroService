@@ -5,6 +5,7 @@ import { ObjectAccountFilterAccount } from './accountMetaTrader';
 
 @ObjectType()
 export class ObjectPlanToAccount implements PlanToAccount {
+	local!: string;
 	@Field(() => Number, { nullable: true }) id!: number;
     @Field(() => String, { nullable: true }) status!: PlanToAccountStatusEnum ;
 	@Field(() => Number, { nullable: true }) planInvoicesId!: number;

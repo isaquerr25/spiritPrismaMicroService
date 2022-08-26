@@ -96,7 +96,27 @@ routes.post('/post_email',jsonParser, async function (req, res) {
 	console.log(await req.body);
 	console.log(await req.body);
 	const emailRandomD = await req.body;
-	const resume = await emailRandom(emailRandomD);
+	const resume = await emailRandom(emailRandomD,
+		{
+	
+			idTransfer:'10',
+			numberContact:'99791203',
+			name:'pato',
+			month:'stember',
+			account:
+				{
+					login:'848987',
+					beginCapital:'681486,12',
+					finishCapital:'56165,21',
+					percent:'5,21',
+					taxes:'55,22',
+					taxesReal:'222'
+				},
+				
+			quotation:5.12,
+		
+		}
+	);
 	console.log(resume); 
 	res.send(resume);
 	
