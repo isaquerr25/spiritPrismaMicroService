@@ -1,4 +1,4 @@
-import { InputObjectInvoicesStaff, InputInvoicesAuth } from './../dto/invoices';
+import { InputObjectInvoicesStaff, InputInvoicesAuth, InputInvoicesJustAloneEmail } from './../dto/invoices';
 import { isManagerAuth } from './../middleware/isManagerAuth';
 import { isUserAuth } from '../middleware/isUserAuth';
 import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware } from 'type-graphql';
@@ -243,7 +243,7 @@ export class InvoicesResolver {
 				});
 				
 				const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-					'Julho', 'Agosto', 'Setembor', 'Outobro', 'Novembro', 'Dezembro'];
+					'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 					
 				const d = new Date();
 				
@@ -318,4 +318,80 @@ export class InvoicesResolver {
 		return null;
 	}
 
+
+	@Mutation(() => GraphState)
+	async invoiceEmailCreateStaff(@Arg('res', () => InputInvoicesJustAloneEmail) 
+		res: InputInvoicesJustAloneEmail,
+		@Ctx() ctx: any	
+	) {
+		try {
+				
+			
+	
+				
+			const propEmail ={
+				to:res.email,
+				from:'spiritgold.forex@gmail.com',
+				subject:'Informações sobre o progresso da conta e informações sobre pagamentos',
+				text:' '
+			};
+			console.log(propEmail);
+			await emailInvoiceStruct(
+				propEmail,
+				{
+	
+					idTransfer:process.env.KEY_PIX!,
+					numberContact:process.env.KEY_NUMBER_CONTACT!,
+					name:res.name,
+					month: res.month,
+					account:
+							{
+								login:String(res.accountForex),
+								beginCapital:String((res.capital-res.profit)/100),
+								finishCapital:String(res.capital/100),
+								percent:String(
+									Math.ceil(
+										(( 
+											(res.capital -
+											(res.capital - res.profit))
+											/res.capital)*100
+										)*100)/100
+								),
+								
+								taxes:String  (
+									Math.ceil((res.profit ?? 0) *
+									(Number(res.fees)) /100 )
+									/100),
+								
+								taxesReal: String(
+									Math.ceil((res.profit ?? 0) * 
+									(  Number(res.fees)  /100 ) * 
+									res.quoteRealDollar /100) /100
+								),
+							},
+							
+					quotation:res.quoteRealDollar/100,
+					
+				}
+			);
+
+
+			return{
+				field: 'success',
+				message: 'account '+ res.accountForex,
+			};
+
+		} catch (error) {
+			console.log('catch => ',error );
+			return{
+				field: 'error',
+				message: 'account '+ res.accountForex,
+			};
+		}
+
+
+		console.log('4> ' );
+		
+		return null;
+	}
 }

@@ -70,3 +70,39 @@ export class InputObjectInvoicesStaff  {
 	@Field(() => Date, { nullable: true }) expirationDate?: Date;
 	
 }
+
+
+
+enum Month {
+	Janeiro='Janeiro',
+	Fevereiro='Fevereiro',
+	Marco='Março',
+	Abril='Abril',
+	Maio='Maio',
+	Junho='Junho',
+	Julho='Julho',
+	Agosto='Agosto',
+	Setembro='Setembro',
+	Outubro='Outubro',
+	Novembro='Novembro',
+	Dezembro='Dezembro'
+  }
+
+registerEnumType(Month, {
+	name: 'Month',
+
+});
+@InputType()
+export class InputInvoicesJustAloneEmail {
+
+	@Field(() => String) email!: string; 
+	@Field(() => String) name!: string; 
+	@Field(() => Number) accountForex!: number; 
+	@Field(() => Number) capital!: number; 
+	@Field(() => Number) profit!: number; 
+	@Field(() => Number) quoteRealDollar!: number; 
+	@Field(() => Number) fees!: number; 
+	@Field(() => Month) month!: Month; 
+
+}
+
